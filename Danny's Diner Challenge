@@ -128,9 +128,35 @@ Limit 1
 
 Question #5: Which item was the most popular for each customer?
 
-Answer:
+Answer:  
+   customer_id  product_name   product_count
+        A          Ramen            3
+        B          Ramen            1
+        B          Sushi            1
+        B          Curry            1
+        C          Ramen            3
 
---- 
+--- Create cte to rank most popular items for each customer ---
+WITH cte AS (
+  SELECT 
+    customer_id, product_name,
+    COUNT(sales.product_id) as product_count,
+    DENSE_RANK() OVER (PARTITION BY customer_id ORDER BY COUNT(sales.product_id) DESC) as sales_rank
+  FROM sales
+  JOIN menu
+  ON menu.product_id = sales.product_id
+  GROUP BY customer_id, product_name
+)
+SELECT 
+  customer_id,  product_name,  product_count, sales_rank
+FROM cte
+WHERE sales_rank = 1;
+
+Question #6:  Which item was purchased first by the customer after they became a member?
+
+Answer: 
+
+---
 
 
 
