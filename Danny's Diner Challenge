@@ -1,0 +1,138 @@
+CREATE TABLE sales (
+  "customer_id" VARCHAR(1),
+  "order_date" DATE,
+  "product_id" INTEGER
+);
+
+INSERT INTO sales
+  ("customer_id", "order_date", "product_id")
+VALUES
+  ('A', '2021-01-01', '1'),
+  ('A', '2021-01-01', '2'),
+  ('A', '2021-01-07', '2'),
+  ('A', '2021-01-10', '3'),
+  ('A', '2021-01-11', '3'),
+  ('A', '2021-01-11', '3'),
+  ('B', '2021-01-01', '2'),
+  ('B', '2021-01-02', '2'),
+  ('B', '2021-01-04', '1'),
+  ('B', '2021-01-11', '1'),
+  ('B', '2021-01-16', '3'),
+  ('B', '2021-02-01', '3'),
+  ('C', '2021-01-01', '3'),
+  ('C', '2021-01-01', '3'),
+  ('C', '2021-01-07', '3');
+ 
+
+CREATE TABLE menu (
+  "product_id" INTEGER,
+  "product_name" VARCHAR(5),
+  "price" INTEGER
+);
+
+INSERT INTO menu
+  ("product_id", "product_name", "price")
+VALUES
+  ('1', 'sushi', '10'),
+  ('2', 'curry', '15'),
+  ('3', 'ramen', '12');
+  
+
+CREATE TABLE members (
+  "customer_id" VARCHAR(1),
+  "join_date" DATE
+);
+
+INSERT INTO members
+  ("customer_id", "join_date")
+VALUES
+  ('A', '2021-01-07'),
+  ('B', '2021-01-09');
+  
+Question #1: What is the total amount each customer spent at the restaurant?  
+
+Answer: 
+           A   76
+           B   74
+           C   36
+ 
+--- Looking at the data tables, product_id is a primary key in the SALES and MENU table. First I join SALES and MENU on that primary key --- 
+SELECT
+  *
+FROM sales
+INNER JOIN menu
+ON menu.product_id = sales.product_id
+
+--- I want total amount per customer so I select customer_id and SUM(price) and use GROUP BY. I add ORDER BY DESC to organize the results --- 
+
+SELECT
+  customer_id, SUM(price) as Total_Spent
+FROM sales
+INNER JOIN menu
+  ON menu.product_id = sales.product_id
+GROUP BY customer_id
+ORDER BY Total_spent DESC;
+
+Question #2: How many days has each customer visited the restaurant?
+
+Answer: 
+           A   4
+           B   6
+           C   2
+           
+--- I use DISTINCT COUNT to add up order_date entries per customer. DISTINCT will make sure the same date is not counted twice --- 
+
+SELECT
+  customer_id, COUNT(DISTINCT order_date) AS total_days
+FROM sales
+GROUP BY customer_id;
+
+Question #3:  What was the first item from the menu purchased by each customer?
+
+Answer:
+          A   Curry + Sushi  
+          B   Curry 
+          C   Ramen 
+   
+--- First I join MENU and SALES tables on product_id and ORDER BY order_date ASC so I can see the oldest purchase date --- 
+SELECT
+  customer_id, product_name, order_date
+FROM sales
+JOIN menu
+  ON menu.product_id = sales.product_id
+ORDER BY order_date ASC
+
+--- This table is relatively small so I can see that the first 5 entries are from the oldest purchase date available "2021 - 01 - 01". I use a WHERE clause but I could also use LIMIT 5 --- 
+SELECT
+  customer_id, product_name, order_date 
+FROM sales
+JOIN menu
+  ON menu.product_id = sales.product_id
+WHERE order_date = '2021-01-01'
+ORDER BY order_date ASC
+
+Question #4: What is the most purchased item on the menu and how many times was it purchased by all customers?
+
+Answer: 
+        Ramen   8   
+
+--- I join MENU and SALES and use COUNT to tally products as # of times purchased --- 
+SELECT 
+  product_name, COUNT(product_name) AS times_purchased
+FROM sales
+JOIN menu 
+  ON menu.product_id = sales.product_id
+GROUP BY product_name
+ORDER BY times_purchased DESC
+Limit 1
+
+Question #5: Which item was the most popular for each customer?
+
+Answer:
+
+--- 
+
+
+
+  
+ 
