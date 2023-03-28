@@ -90,7 +90,8 @@ GROUP BY customer_id;
 Question #3:  What was the first item from the menu purchased by each customer?
 
 Answer:
-          A   Curry + Sushi  
+          A   Curry 
+	  A   Sushi  
           B   Curry 
           C   Ramen 
    
@@ -262,8 +263,12 @@ ON menu.product_id = sales.product_id
 WHERE customer_id IN ('A', 'B')
 GROUP BY customer_id;
 
+Insights:
 
-
+1. On average, customers spent $62 in total at Danny's Diner.
+2. On average, each customer has visited the diner 4 times.
+3. The most popular item is ramen.
+ 
 
 
   
