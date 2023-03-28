@@ -109,7 +109,7 @@ FROM sales
 JOIN menu
   ON menu.product_id = sales.product_id
 WHERE order_date = '2021-01-01'
-ORDER BY order_date ASC
+ORDER BY order_date ASC;
 
 Question #4: What is the most purchased item on the menu and how many times was it purchased by all customers?
 
@@ -124,7 +124,7 @@ JOIN menu
   ON menu.product_id = sales.product_id
 GROUP BY product_name
 ORDER BY times_purchased DESC
-Limit 1
+Limit 1;
 
 Question #5: Which item was the most popular for each customer?
 
@@ -155,8 +155,114 @@ WHERE sales_rank = 1;
 Question #6:  Which item was purchased first by the customer after they became a member?
 
 Answer: 
+        A   Curry 
+        B   Sushi
 
----
+--- First I join all three tables on their respective primary keys and filter for the first purchase date after join date --- 
+SELECT 
+  sales.customer_id, sales.order_date, menu.product_name, members.join_date
+FROM sales 
+JOIN menu 
+  ON menu.product_id = sales.product_id
+	  JOIN members 
+      ON members.customer_id = sales.customer_id
+WHERE members.join_date <= sales.order_date
+ORDER BY sales.order_date ASC
+
+--- To select the first item bought I use a CTE to run the function and select from it --- 
+WITH ranked_sales AS 
+(SELECT sales.customer_id, sales.order_date, menu.product_name, members.join_date,
+ RANK () OVER (PARTITION BY sales.customer_id ORDER BY sales.order_date) AS rank
+FROM sales 
+JOIN menu 
+ON menu.product_id = sales.product_id
+	JOIN members 
+    ON members.customer_id = sales.customer_id
+WHERE members.join_date <= sales.order_date)
+SELECT customer_id, product_name, order_date, join_date 
+FROM ranked_sales
+WHERE rank = 1;
+
+Question #7: Which item was purchased just before the customer became a member?
+
+Answer:
+        A     Sushi
+        A     Curry
+        B     Curry 
+
+--- This can be answered using the CTE query above by editing mem.join_date > s.order_date --- 
+WITH ranked_sales AS 
+(SELECT sales.customer_id, sales.order_date, menu.product_name, members.join_date,
+ RANK () OVER (PARTITION BY sales.customer_id ORDER BY sales.order_date) AS rank
+FROM sales 
+JOIN menu 
+ON menu.product_id = sales.product_id
+	JOIN members 
+    ON members.customer_id = sales.customer_id
+WHERE members.join_date > sales.order_date)
+SELECT customer_id, product_name, order_date, join_date 
+FROM ranked_sales
+WHERE rank = 1;
+
+Question #8: What is the total items and amount spent for each member before they became a member?
+
+Answer:
+  customer_id  number_of_items  total_price
+        A            3              40
+        B            2              25
+
+--- Join all three tables, COUNT products and SUM price, filter by join_date > order_date --- 
+SELECT sales.customer_id, COUNT(sales.product_id) AS number_of_items, SUM(menu.price) AS total_price
+FROM sales 
+JOIN menu 
+ON menu.product_id = sales.product_id 
+	JOIN members 
+    	ON members.customer_id = sales.customer_id
+WHERE members.join_date > sales.order_date
+GROUP BY sales.customer_id; 
+
+Question #9: If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+
+Answer:
+        customer_id    total_points
+              A             860
+              B             940
+              C             360
+
+--- Use CASE to SUM multiplier --- 
+SELECT 
+  customer_id,
+    SUM(CASE 
+      WHEN menu.product_name = 'sushi' THEN menu.price*20
+      ELSE menu.price*10
+    END) AS total_points
+FROM sales 
+JOIN menu 
+  ON menu.product_id = sales.product_id 
+GROUP BY customer_id
+ORDER BY customer_id ASC; 
+
+Question #10: In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+
+Answer:
+        customer_id     total_points
+             A              1370
+             B              940
+
+--- Using the CASE query from the previous question, edit to limit the date to be the first week after join_date for customer A and B --- 
+SELECT customer_id,
+SUM(CASE 
+WHEN menu.product_name = 'sushi' THEN menu.price*20
+WHEN sales.order_date BETWEEN '2021-01-07' AND '2021-01-14' THEN menu.price*20
+    ELSE menu.price*10
+END) AS total_points
+FROM sales 
+JOIN menu 
+ON menu.product_id = sales.product_id
+WHERE customer_id IN ('A', 'B')
+GROUP BY customer_id;
+
+
 
 
 
