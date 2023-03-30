@@ -113,84 +113,95 @@ VALUES
 
 
 
---- Cleaning 'null' and NULL from customer_orders --- 
+--- Cleaning 'null' and '' from customer_orders --- 
 UPDATE customer_orders
 SET exclusions = CASE WHEN exclusions = 'null' 
-     THEN ' '  
+     THEN NULL
      WHEN exclusions = ''
-     THEN ' ' 
+     THEN NULL
      END
 WHERE exclusions = 'null'
 OR exclusions = '';
 
 UPDATE customer_orders
 SET extras = CASE WHEN extras = 'null'  
-    THEN ' ' 
+    THEN NULL
     WHEN extras = ''
-       THEN ' ' 
+       THEN NULL 
     END
 WHERE extras = 'null'
 OR extras = '';
 
-UPDATE customer_orders
-SET extras = CASE WHEN extras IS NULL 
-     THEN ' ' 
-     END 
-WHERE extras IS NULL; 
-
 --- Cleaning 'null' and NULL from runner_orders and replacing them with ' ' empty space --- 
---- Pickup_time columns keeps NULL as a value so I can change the datatype from VARCHAR to DATETIME --- 
 UPDATE runner_orders
 SET pickup_time = CASE WHEN pickup_time = 'null' 
       THEN NULL 
       END
 WHERE pickup_time = 'null';
-ALTER TABLE runner_orders
-ALTER COLUMN pickup_time TYPE TIMESTAMP USING CASE
-    WHEN pickup_time = '' THEN NULL
-    ELSE to_timestamp(pickup_time, 'YYYY-MM-DD HH24:MI:SS')
-END;
 
 UPDATE runner_orders 
 SET cancellation = CASE WHEN cancellation = 'null'
-	  THEN ' '
+	  THEN NULL
       END 
 WHERE cancellation = 'null';
 UPDATE runner_orders 
-SET cancellation = CASE WHEN cancellation IS NULL 
-	  THEN ' ' 
+SET cancellation = CASE WHEN cancellation ''
+      THEN NULL
       END 
 WHERE cancellation IS NULL;
 
 UPDATE runner_orders 
 SET duration = CASE WHEN duration = 'null' 
-		THEN ' ' 
+	THEN NULL
         END 
 WHERE duration = 'null';
 UPDATE runner_orders 
-SET duration = CASE WHEN duration IS NULL 
-		THEN ' ' 
+SET duration = CASE WHEN duration = ''
+	THEN NULL
         END 
- WHERE duration IS NULL;
+ WHERE duration = '';
  
  UPDATE runner_orders 
  SET distance = CASE WHEN distance = 'null'
- 		THEN ' ' 
+ 	THEN NULL
         END 
  WHERE distance = 'null';
  
 --- TRIM (km, min, minutes) from distance and pickup_time ---  
- UPDATE runner_orders 
+UPDATE runner_orders 
  SET distance = REPLACE(distance, 'km', ' ');
- UPDATE runner_orders 
+UPDATE runner_orders 
  SET distance = TRIM(distance);
  
 UPDATE runner_orders 
  SET duration = SUBSTRING(duration, 1, 2);
- UPDATE runner_orders 
+UPDATE runner_orders 
  SET duration = TRIM(duration);
 
---- Change data type for columns pickup_time, duration, and order_time --- 
+--- Change data type for columns pickup_time VARCHAR -> TIMESTAMP, duration -> INTEGER, and order_time -> FLOAT --- 
+ALTER TABLE runner_orders
+ALTER COLUMN pickup_time TYPE TIMESTAMP USING 
+CASE
+    WHEN pickup_time = '' THEN NULL
+    ELSE to_timestamp(pickup_time, 'YYYY-MM-DD HH24:MI:SS')
+END;
+
+ALTER TABLE runner_orders
+ALTER COLUMN duration TYPE INT USING 
+CASE 
+   WHEN duration <> '' 
+   THEN duration::INTEGER 
+END;
+
+ALTER TABLE runner_orders
+ALTER COLUMN distance TYPE FLOAT USING 
+CASE 
+    WHEN distance <> '' 
+    THEN distance::FLOAT 
+END;
+
+
+
 
 
 
