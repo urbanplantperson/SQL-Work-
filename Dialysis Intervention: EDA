@@ -1,8 +1,9 @@
-dialysisdb=# SELECT SUM(avg_sbmtd_chrg), 
-dialysisdb-# rndrng_prvdr_state_abrvtn 
-dialysisdb-# FROM medicare_services_2020 
-dialysisdb-# WHERE rndrng_prvdr_type = 'Nephrology' 
-dialysisdb-# GROUP BY rndrng_prvdr_state_abrvtn;
+ SELECT SUM(avg_sbmtd_chrg), 
+  rndrng_prvdr_state_abrvtn 
+ FROM medicare_services_2020 
+ WHERE rndrng_prvdr_type = 'Nephrology' 
+ GROUP BY rndrng_prvdr_state_abrvtn;
+ 
       sum      | rndrng_prvdr_state_abrvtn 
 ---------------+---------------------------
  $1,460,156.23 | CA
