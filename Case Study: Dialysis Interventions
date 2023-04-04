@@ -1,4 +1,5 @@
-PROBLEM: What is the cost savings for a clinical intervention for home dialysis versus in center dialysis?
+PROBLEM: How does the utilization of dialysis treatments vary across the US? 
+  What is the trend utilization of dialysis treatments in the US from 2015 - 2020, and what factors such as geographic location, provider type, and beneficiary characteristics may be affecting this trend?
 
 Datasets:
   Medicare Physician and Other Practicioners - by Provider and Service 
