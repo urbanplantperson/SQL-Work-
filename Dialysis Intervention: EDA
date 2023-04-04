@@ -61,3 +61,28 @@ dialysisdb-# GROUP BY rndrng_prvdr_state_abrvtn;
    $265,491.62 | AZ
    $142,689.51 | KS
 
+--- Exploring most used services by HCPCS code --- 
+SELECT 
+      hcpcs_cd,
+      COUNT(hcpcs_cd) AS count
+FROM medicare_services_2020 
+GROUP BY hcpcs_cd
+ORDER BY count DESC
+LIMIT 10;
+
+--- top 4 codes are ESRD related --- 
+hcpcs_cd | count 
+----------+-------
+ 90960    |  7489
+ 90961    |  7310
+ 90962    |  2957
+ 90966    |  2625
+ 36902    |  2512
+ 90945    |  1922
+ 93990    |  1866
+ 36901    |  1266
+ 90970    |  1233
+ 36907    |   984
+(10 rows)
+
+
