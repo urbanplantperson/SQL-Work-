@@ -70,7 +70,7 @@ GROUP BY hcpcs_cd
 ORDER BY count DESC
 LIMIT 10;
 
---- top 4 codes are ESRD related --- 
+ 
 hcpcs_cd | count 
 ----------+-------
  90960    |  7489
