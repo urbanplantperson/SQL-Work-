@@ -42,4 +42,5 @@ CONTEXT:  COPY medicare_services_2020, line 22853, column rndrng_prvdr_state_fip
 dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN rndrng_prvdr_state_fips TYPE VARCHAR;
 ALTER TABLE
 dialysisdb=# \copy medicare_services_2020 FROM '/Users/dungnguyen/Desktop/medicare_services_2020.csv' DELIMITER ',' CSV HEADER; 
-COPY 34202
+
+--- All of this is wrong and I am a dumb dumb that downloaded filtered data and not the whole dataset, dont be a dumb dumb --- 
