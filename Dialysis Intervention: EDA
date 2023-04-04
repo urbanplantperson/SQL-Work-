@@ -64,25 +64,29 @@ dialysisdb-# GROUP BY rndrng_prvdr_state_abrvtn;
 --- Exploring most used services by HCPCS code --- 
 SELECT 
       hcpcs_cd,
-      COUNT(hcpcs_cd) AS count
+      COUNT(hcpcs_cd) AS count,
+      hcpcs_desc
 FROM medicare_services_2020 
-GROUP BY hcpcs_cd
+GROUP BY hcpcs_cd, hcpcs_desc
 ORDER BY count DESC
 LIMIT 10;
 
- 
-hcpcs_cd | count 
-----------+-------
- 90960    |  7489
- 90961    |  7310
- 90962    |  2957
- 90966    |  2625
- 36902    |  2512
- 90945    |  1922
- 93990    |  1866
- 36901    |  1266
- 90970    |  1233
- 36907    |   984
+ hcpcs_cd | count |                                                                               hcpcs_desc                                                                               
+----------+-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 90960    |  7489 | Dialysis services (4 or more physician visits per month), patient 20 years of age and older
+ 90961    |  7310 | Dialysis services (2-3 physician visits per month), patient 20 years of age and older
+ 90962    |  2957 | Dialysis services (1 physician visit per month), patient 20 years of age and older
+ 90966    |  2625 | Home dialysis services per month, patient 20 years of age or older
+ 36902    |  2512 | Insertion of needle and/or catheter into dialysis circuit and balloon dilation of dialysis segment, with imaging including radiological supervision and interpretation
+ 90945    |  1922 | Dialysis procedure including one evaluation
+ 93990    |  1866 | Ultrasound of dialysis access
+ 36901    |  1266 | Insertion of needle and/or catheter into dialysis circuit, with imaging including radiological supervision and interpretation
+ 90970    |  1233 | Dialysis services, per day (less than full month service), patient 20 years of age or older
+ 36907    |   984 | Balloon dilation of dialysis segment, accessed through the skin, with imaging including radiological supervision and interpretation
 (10 rows)
+
+--- ESRD related services most utilized, chronic care condition patients need more treatments --- 
+ 
+
 
 
