@@ -1,0 +1,61 @@
+CREATE TABLE medicare_services_2020 (
+dialysisdb(#  rndrng_NPI TEXT,
+dialysisdb(#  rndrng_prvdr_Last_Org_Name TEXT,
+dialysisdb(#  rndrng_prvdr_First_Name TEXT,
+dialysisdb(#  rndrng_prvdr_MI TEXT,
+dialysisdb(#  rndrng_prvdr_crdntls TEXT,
+dialysisdb(#  rndrng_prvdr_gndr TEXT,
+dialysisdb(#  rndrng_prvdr_Ent_Cd TEXT,
+dialysisdb(#  rndrng_prvdr_St1 VARCHAR,
+dialysisdb(#  rndrng_prvdr_St2 VARCHAR,
+dialysisdb(#  rndrng_prvdr_city VARCHAR,
+dialysisdb(#  rndrng_prvdr_state_abrvtn VARCHAR,
+dialysisdb(#  rndrng_prvdr_state_FIPS INTEGER,
+dialysisdb(#  rndrng_prvdr_zip5 INTEGER,
+dialysisdb(#  rndrng_prvdr_RUCA INTEGER,
+dialysisdb(#  rndrng_prvdr_RUCA_desc TEXT,
+dialysisdb(#  rndrng_prvdr_cntry TEXT,
+dialysisdb(#  rndrng_prvdr_type TEXT,
+dialysisdb(#  rndrng_prvdr_mdcr_prtcptg_ind TEXT,
+dialysisdb(#  HCPCS_cd VARCHAR, 
+dialysisdb(#  HCPCS_desc TEXT,
+dialysisdb(#  HCPCS_Drug_ind TEXT,
+dialysisdb(#  place_of_srvc TEXT,
+dialysisdb(#  Tot_Benes VARCHAR, 
+dialysisdb(#  Tot_srvcs VARCHAR,
+dialysisdb(#  Tot_Bene_day_srvcs VARCHAR, 
+dialysisdb(#  Avg_Sbmtd_Chrg MONEY,
+dialysisdb(#  Avg_Mdcr_Alowd_amnt MONEY,
+dialysisdb(#  Avg_mdcr_Pymnt_Amnt MONEY,
+dialysisdb(#  Avg_mdcr_stdzd_amnt MONEY);
+CREATE TABLE
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN rndrng_prvdr_RUCA TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN rndrng_prvdr_state_fips TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN rndrng_prvdr_zip5 TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# \copy medicare_services_2020 FROM '/Users/dungnguyen/Desktop/medicare_services_2020.csv' DELIMITER ',' CSV HEADER; 
+ERROR:  invalid input syntax for type money: "3.33333e-05"
+CONTEXT:  COPY medicare_services_2020, line 3855378, column avg_sbmtd_chrg: "3.33333e-05" --- CLEAN THIS --- 
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN avg_sbmtd_chrg TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# \copy medicare_services_2020 FROM '/Users/dungnguyen/Desktop/medicare_services_2020.csv' DELIMITER ',' CSV HEADER; 
+ERROR:  invalid input syntax for type money: "3.33333e-05"
+CONTEXT:  COPY medicare_services_2020, line 3855378, column avg_mdcr_alowd_amnt: "3.33333e-05" --- CLEAN THIS --- 
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN avg_mdcr_alowd_amnt TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# \copy medicare_services_2020 FROM '/Users/dungnguyen/Desktop/medicare_services_2020.csv' DELIMITER ',' CSV HEADER; 
+ERROR:  invalid input syntax for type money: "2.93907e-05"
+CONTEXT:  COPY medicare_services_2020, line 3855378, column avg_mdcr_pymnt_amnt: "2.93907e-05" --- CLEAN THIS --- 
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN avg_mdcr_pymnt_amnt TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# \copy medicare_services_2020 FROM '/Users/dungnguyen/Desktop/medicare_services_2020.csv' DELIMITER ',' CSV HEADER; 
+ERROR:  invalid input syntax for type money: "2.93907e-05"
+CONTEXT:  COPY medicare_services_2020, line 3855378, column avg_mdcr_stdzd_amnt: "2.93907e-05" --- CLEAN THIS --- 
+dialysisdb=# ALTER TABLE medicare_services_2020 ALTER COLUMN avg_mdcr_stdzd_amnt TYPE VARCHAR;
+ALTER TABLE
+dialysisdb=# \copy medicare_services_2020 FROM '/Users/dungnguyen/Desktop/medicare_services_2020.csv' DELIMITER ',' CSV HEADER; 
+COPY 9449361
+
+--- Converted to UTF8, created table, copied data from csv --- 
