@@ -1,4 +1,4 @@
---- Find most common procedures in the US, limit top 100 --- 
+--- Find most commonly coded procedures in the US, limit top 100 --- 
  SELECT 
   hcpcs_cd,
   COUNT(hcpcs_cd) AS count,
@@ -141,7 +141,7 @@ FROM medicare_services_2020
  27245    | Surgical treatment of broken thigh bone                                                                                                                                | 999.5
 (50 rows)
 
---- Find most expensive AND most utilized services --- not quite but something else... ---
+--- Find most expensive AND most coded services --- not quite but something else... ---
 SELECT hcpcs_cd, COUNT(hcpcs_cd) AS count, hcpcs_desc, avg_mdcr_stdzd_amnt 
 FROM medicare_services_2020 
 WHERE rndrng_prvdr_cntry = 'US' 
@@ -201,4 +201,305 @@ hcpcs_cd | count  |                                                             
  77080    |   7174 | Bone density measurement using dedicated x-ray machine                                                                                             | 39.26
  76937    |   7164 | Ultrasound guidance for accessing into blood vessel                                                                                                | 11.6
 (50 rows)
+--- most coded + expensive procedures --- 
+SELECT hcpcs_cd, hcpcs_desc, COUNT(hcpcs_cd) AS count, SUM(avg_mdcr_stdzd_amnt::numeric) AS sum 
+FROM medicare_services_2020 
+WHERE rndrng_prvdr_cntry = 'US'
+GROUP BY hcpcs_cd, hcpcs_desc 
+ORDER BY count DESC, sum DESC 
+LIMIT 50;
+
+hcpcs_cd    hcpcs_desc                                                                                                                             count    sum
+ 99213    | Established patient office or other outpatient visit, typically 15 minutes                                                          | 460894 | 21425578.6023258833
+ 99214    | Established patient office or other outpatient, visit typically 25 minutes                                                          | 449763 | 30569085.2331051526
+ 99232    | Subsequent hospital inpatient care, typically 25 minutes per day                                                                    | 172943 |  9707172.5175780714
+ 99204    | New patient office or other outpatient visit, typically 45 minutes                                                                  | 170977 | 18651480.1063934040
+ 99203    | New patient office or other outpatient visit, typically 30 minutes                                                                  | 164212 | 11125751.0240068257
+ G0008    | Administration of influenza virus vaccine                                                                                           | 135203 |  1866981.0275779033
+ 99223    | Initial hospital inpatient care, typically 70 minutes per day                                                                       | 131582 |  20668251.540938505
+ 99233    | Subsequent hospital inpatient care, typically 35 minutes per day                                                                    | 129113 | 10530633.6816210181
+ 99212    | Established patient office or other outpatient visit, typically 10 minutes                                                          | 113146 |  3299130.5905095416
+ 99215    | Established patient office or other outpatient, visit typically 40 minutes                                                          | 112779 | 10925304.6853651544
+ 99222    | Initial hospital inpatient care, typically 50 minutes per day                                                                       |  98354 |  10441691.641108449
+ 99442    | Physician telephone patient service, 11-20 minutes of medical discussion                                                            |  98267 |  4882624.5769220279
+ G0439    | Annual wellness visit, includes a personalized prevention plan of service (pps), subsequent visit                                   |  92005 | 10219953.0004922072
+ 36415    | Insertion of needle into vein for collection of blood sample                                                                        |  90992 |   267132.0314064654
+ 90662    | Vaccine for influenza for injection into muscle                                                                                     |  86655 |  5006178.9779144045
+ G0009    | Administration of pneumococcal vaccine                                                                                              |  74429 |  1038953.6564583977
+ 93000    | Routine ekg using at least 12 leads including interpretation and report                                                             |  71059 |   817181.9439785901
+ 99291    | Critical care delivery critically ill or injured patient, first 30-74 minutes                                                       |  68248 |   12234509.20333451
+ 97110    | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes                              |  64572 |  1264339.8563412824
+ 99443    | Physician telephone patient service, 21-30 minutes of medical discussion                                                            |  60810 |  4476283.3478212663
+ 99284    | Emergency department visit, problem of high severity                                                                                |  59462 |   5186885.234442161
+ 96372    | Injection beneath the skin or into muscle for therapy, diagnosis, or prevention                                                     |  59204 |   562668.0097307657
+ 99285    | Emergency department visit, problem with significant threat to life or function                                                     |  58809 |   7908266.687002002
+ 71046    | X-ray of chest, 2 views                                                                                                             |  57268 |   731328.7397660943
+ 99231    | Subsequent hospital inpatient care, typically 15 minutes per day                                                                    |  56635 |   1715251.333556619
+ 99239    | Hospital discharge day management, more than 30 minutes                                                                             |  56046 |   4684961.880604446
+ 93010    | Routine electrocardiogram (ekg) using at least 12 leads with interpretation and report                                              |  55927 |   356173.8203728325
+ 99205    | New patient office or other outpatient visit, typically 60 minutes                                                                  |  55602 |   8010586.438355156
+ 97140    | Manual (physical) therapy techniques to 1 or more regions, each 15 minutes                                                          |  54251 |   939570.4051195918
+ 90732    | Vaccine for pneumococcal polysaccharide for injection beneath the skin or into muscle, patient 2 years or older                     |  52471 |  6019631.3152424221
+ 99283    | Emergency department visit, moderately severe problem                                                                               |  49543 |   2288928.984251447
+ 81003    | Automated urinalysis test                                                                                                           |  44561 |    98405.5360177546
+ 99441    | Physician telephone patient service, 5-10 minutes of medical discussion                                                             |  43117 |  1257097.2359553850
+ 99202    | New patient office or other outpatient visit, typically 20 minutes                                                                  |  42792 |  2070878.5854152711
+ 83036    | Hemoglobin a1c level                                                                                                                |  42782 |   407182.8026240224
+ 97112    | Therapeutic procedure to re-educate brain-to-nerve-to-muscle function, each 15 minutes                                              |  42372 |  1012849.8280947495
+ 20610    | Aspiration and/or injection of large joint or joint capsule                                                                         |  41389 |  1810328.0142457854
+ 73030    | X-ray of shoulder, minimum of 2 views                                                                                               |  38872 |   561842.4849436635
+ 99238    | Hospital discharge day management, 30 minutes or less                                                                               |  38811 |   2207771.945425496
+ 97530    | Therapeutic activities to improve function, with one-on-one contact between patient and provider, each 15 minutes                   |  38619 |  1090338.0842512453
+ 00731    | Anesthesia for procedure on esophagus, stomach, and/or upper small bowel using an endoscope                                         |  37958 |   3328405.686412450
+ 92014    | Eye and medical examination for diagnosis and treatment, established patient, 1 or more visits                                      |  37476 |  3018173.8390938837
+ 73502    | X-ray of hip with pelvis, 2-3 views                                                                                                 |  37107 |   644880.2236082459
+ 93306    | Ultrasound examination of heart including color-depicted blood flow rate, direction, and valve function                             |  36429 |  3359228.0518724806
+ 85025    | Complete blood cell count (red cells, white blood cell, platelets), automated test                                                  |  34818 |   264932.1778684835
+ 99308    | Subsequent nursing facility visit, typically 15 minutes per day                                                                     |  34505 |  1666039.2404811565
+ 90694    | Influenza virus vaccine, quadrivalent (aiiv4), inactivated, adjuvanted, preservative free, for injection into muscle, 0.5 ml dosage |  34250 |  1950506.6318325661
+ 99221    | Initial hospital inpatient care, typically 30 minutes per day                                                                       |  34106 |   2670213.807104740
+ 73630    | X-ray of foot, minimum of 3 views                                                                                                   |  34096 |   487816.7360513852
+ 99309    | Subsequent nursing facility visit, typically 25 minutes per day                                                                     |  33534 |  2145075.2105633972
+(50 rows)
+
+--- Costs by provider type --- 
+
+ SELECT rndrng_prvdr_type, SUM(avg_mdcr_stdzd_amnt::numeric) AS sum 
+  FROM medicare_services_2020 
+  WHERE rndrng_prvdr_cntry = 'US' 
+ GROUP BY rndrng_prvdr_type 
+ ORDER BY sum DESC;
+                    rndrng_prvdr_type                    |         sum         
+---------------------------------------------------------+---------------------
+ Internal Medicine                                       | 58917052.8831379593
+ Diagnostic Radiology                                    | 51288149.7187553470
+ Ambulatory Surgical Center                              | 49409297.2436648592
+ Family Practice                                         | 42688932.9540866586
+ Orthopedic Surgery                                      | 39988767.6137697686
+ Cardiology                                              | 35472495.6539902859
+ Nurse Practitioner                                      | 35058673.4707843248
+ Ophthalmology                                           | 26477508.2409005982
+ Physician Assistant                                     | 21783273.4810822323
+ Dermatology                                             | 21234786.4458772746
+ Anesthesiology                                          | 20541744.0553039005
+ Emergency Medicine                                      | 19329989.6504710983
+ General Surgery                                         | 18204793.8079349016
+ Gastroenterology                                        | 17126013.5923642207
+ Urology                                                 | 16529504.5804824697
+ Vascular Surgery                                        | 13799702.8405793666
+ Radiation Oncology                                      | 11941845.2868544810
+ Neurology                                               | 11886485.2221781981
+ Certified Registered Nurse Anesthetist (CRNA)           | 11861935.4233932923
+ Hematology-Oncology                                     | 11594170.2456032777
+ Nephrology                                              | 11587248.3508074838
+ Interventional Cardiology                               | 10953284.0619002542
+ Neurosurgery                                            | 10223120.3623227310
+ Pulmonary Disease                                       |  9275118.9947531805
+ Podiatry                                                |  9194198.0073358596
+ Hospitalist                                             |  8946550.3872487954
+ Ambulance Service Provider                              |  8643552.0312627581
+ Physical Therapist in Private Practice                  |  8637480.6521712888
+ Clinical Cardiac Electrophysiology                      |  8629187.2535226961
+ Optometry                                               |  8596242.0912921156
+ Mass Immunizer Roster Biller                            |  8085961.5405403647
+ Otolaryngology                                          |  8000198.8416573533
+ Physical Medicine and Rehabilitation                    |  6380097.9332212842
+ Interventional Radiology                                |  6049665.9507577704
+ Pathology                                               |  5320832.5946140383
+ Psychiatry                                              |  5264487.5742880251
+ Obstetrics & Gynecology                                 |  5080665.8755556535
+ Thoracic Surgery                                        |  4506940.1667831761
+ Medical Oncology                                        |  4190963.4060890860
+ Clinical Laboratory                                     |  3849248.9899390865
+ Pain Management                                         |  3821885.6565641764
+ Independent Diagnostic Testing Facility (IDTF)          |  3671716.3967200499
+ Interventional Pain Management                          |  3068538.5544815141
+ Endocrinology                                           |  3048677.0028585732
+ Cardiac Surgery                                         |  3017230.5159034399
+ Rheumatology                                            |  2962775.6187918181
+ Infectious Disease                                      |  2945429.4620880331
+ Centralized Flu                                         |  2857618.7269215018
+ Plastic and Reconstructive Surgery                      |  2738696.7886342651
+ Psychologist, Clinical                                  |  2701955.3818984031
+ Critical Care (Intensivists)                            |  2424893.6677184265
+ Hand Surgery                                            |  2127572.7757158642
+ Licensed Clinical Social Worker                         |  1863873.5784044568
+ General Practice                                        |  1699631.4428015788
+ Colorectal Surgery (Proctology)                         |  1400904.7233925261
+ Geriatric Medicine                                      |  1250258.3266959279
+ Sports Medicine                                         |  1162982.2878767958
+ Chiropractic                                            |  1126168.7681957509
+ Allergy/ Immunology                                     |  1035162.0354435257
+ Surgical Oncology                                       |   968931.0035604395
+ Gynecological Oncology                                  |   950071.7728579997
+ Occupational Therapist in Private Practice              |   886458.4058701423
+ Nuclear Medicine                                        |   807412.3295975807
+ Hospice and Palliative Care                             |   662139.7138483721
+ Advanced Heart Failure and Transplant Cardiology        |   641676.7344825588
+ Oral Surgery (Dentist only)                             |   639650.5011994683
+ Hematology                                              |   546128.9571397835
+ Audiologist                                             |   503894.8346794693
+ Sleep Medicine                                          |   465480.1178761008
+ Pediatric Medicine                                      |   446202.7862256659
+ Certified Clinical Nurse Specialist                     |   371696.2083755249
+ Anesthesiology Assistant                                |    367902.225893643
+ Pharmacy                                                |   335249.0306077812
+ Osteopathic Manipulative Medicine                       |   322815.9300719926
+ Undefined Physician type                                |   258766.6202388206
+ Speech Language Pathologist                             |   234116.5407663195
+ Opioid Treatment Program                                |   211641.5983895532
+ Portable X-Ray Supplier                                 |   208259.0896154245
+ Peripheral Vascular Disease                             |   205487.9988010750
+ Maxillofacial Surgery                                   |   143803.6003294407
+ Hematopoietic Cell Transplantation and Cellular Therapy |   140771.3779881785
+ Radiation Therapy Center                                |   126146.3377541460
+ Dentist                                                 |   121403.4931040404
+ Registered Dietitian or Nutrition Professional          |    92694.9131373649
+ Geriatric Psychiatry                                    |    78897.7069898560
+ Preventive Medicine                                     |    72706.2204684061
+ Neuropsychiatry                                         |    69752.9911765319
+ Micrographic Dermatologic Surgery                       |    66004.3158514503
+ Undersea and Hyperbaric Medicine                        |    55721.5854766522
+ Addiction Medicine                                      |    53046.0000962938
+ Clinic or Group Practice                                |    46386.0178581017
+ Certified Nurse Midwife                                 |    41626.5833804583
+ All Other Suppliers                                     |    37610.7069970153
+ Public Health or Welfare Agency                         |    25910.6247126695
+ Medical Toxicology                                      |    12744.9955007875
+ Medical Genetics and Genomics                           |      6698.699065216
+ Mammography Center                                      |      4241.129296314
+ Medicare Diabetes Preventive Program                    |      2051.537341152
+ Unknown Supplier/Provider Specialty                     |     1769.9205614333
+ Slide Preparation Facility                              |       907.428904363
+ Intensive Cardiac Rehabilitation                        |       683.299336710
+ Adult Congenital Heart Disease                          |        5.4836842105
+(102 rows)
+
+--- Find most used service by distinct beneficiaries --- 
+SELECT hcpcs_cd, COUNT(hcpcs_cd) * tot_bene_day_srvcs::numeric AS count, hcpcs_desc
+FROM medicare_services_2020 
+WHERE rndrng_prvdr_cntry = 'US"
+GROUP BY hcpcs_cd, hcpcs_desc, tot_bene_day_srvcs
+ORDER BY count DESC
+LIMIT 50;
+
+hcpcs_cd     count     hcpcs_desc 
+ 36415    | 1647349 | Insertion of needle into vein for collection of blood sample
+ 80053    | 1404354 | Blood test, comprehensive group of blood chemicals
+ 85025    | 1072166 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ 36415    | 1001756 | Insertion of needle into vein for collection of blood sample
+ 80061    |  985223 | Blood test, lipids (cholesterol and triglycerides)
+ 84460    |  929001 | Liver enzyme (sgpt), level
+ 36415    |  916514 | Insertion of needle into vein for collection of blood sample
+ 80053    |  820678 | Blood test, comprehensive group of blood chemicals
+ 80053    |  782146 | Blood test, comprehensive group of blood chemicals
+ 84443    |  725668 | Blood test, thyroid stimulating hormone (tsh)
+ 36415    |  649031 | Insertion of needle into vein for collection of blood sample
+ 85025    |  641705 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ 36415    |  614151 | Insertion of needle into vein for collection of blood sample
+ 80061    |  604686 | Blood test, lipids (cholesterol and triglycerides)
+ 80053    |  604044 | Blood test, comprehensive group of blood chemicals
+ 83036    |  601696 | Hemoglobin a1c level
+ 80053    |  586166 | Blood test, comprehensive group of blood chemicals
+ 80061    |  583779 | Blood test, lipids (cholesterol and triglycerides)
+ 36415    |  573562 | Insertion of needle into vein for collection of blood sample
+ 36415    |  573369 | Insertion of needle into vein for collection of blood sample
+ 85025    |  564236 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ 80053    |  557240 | Blood test, comprehensive group of blood chemicals
+ 80053    |  551659 | Blood test, comprehensive group of blood chemicals
+ 36415    |  528470 | Insertion of needle into vein for collection of blood sample
+ 36415    |  520261 | Insertion of needle into vein for collection of blood sample
+ 85025    |  485710 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ G0471    |  478496 | Collection of venous blood by venipuncture or urine sample by catheterization from an individual in a skilled nursing facility (snf) or by a laboratory on behalf of a home health agency (hha)
+ 36415    |  476603 | Insertion of needle into vein for collection of blood sample
+ 36415    |  469785 | Insertion of needle into vein for collection of blood sample
+ 85025    |  465730 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ G0249    |  461016 | Provision of test materials and equipment for home inr monitoring of patient with either mechanical heart valve(s), chronic atrial fibrillation, or venous thromboembolism who meets medicare coverage criteria; includes: provision of materials for use in the
+ G0008    |  460430 | Administration of influenza virus vaccine
+ 84443    |  456848 | Blood test, thyroid stimulating hormone (tsh)
+ 80053    |  455349 | Blood test, comprehensive group of blood chemicals
+ 84443    |  451894 | Blood test, thyroid stimulating hormone (tsh)
+ 80053    |  445099 | Blood test, comprehensive group of blood chemicals
+ 36415    |  443527 | Insertion of needle into vein for collection of blood sample
+ 85025    |  442319 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ G0249    |  434497 | Provision of test materials and equipment for home inr monitoring of patient with either mechanical heart valve(s), chronic atrial fibrillation, or venous thromboembolism who meets medicare coverage criteria; includes: provision of materials for use in the
+ 80053    |  431423 | Blood test, comprehensive group of blood chemicals
+ 85025    |  430305 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ 80053    |  428714 | Blood test, comprehensive group of blood chemicals
+ 85025    |  425282 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ 36415    |  423198 | Insertion of needle into vein for collection of blood sample
+ 81528    |  412534 | Gene analysis (colorectal cancer)
+ 80053    |  410042 | Blood test, comprehensive group of blood chemicals
+ 83036    |  406668 | Hemoglobin a1c level
+ 80061    |  402387 | Blood test, lipids (cholesterol and triglycerides)
+ 80061    |  394086 | Blood test, lipids (cholesterol and triglycerides)
+ 85025    |  391453 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+(50 rows)
+
+--- most utilized services --- 
+
+SELECT hcpcs_cd, SUM(tot_srvcs::numeric) AS count, hcpcs_desc
+dialysisdb-# FROM medicare_services_2020 
+dialysisdb-# WHERE rndrng_prvdr_cntry = 'US'
+dialysisdb-# GROUP BY hcpcs_cd, hcpcs_desc 
+dialysisdb-# ORDER BY count DESC
+dialysisdb-# LIMIT 50;
+ hcpcs_cd |    count    |                                                                                      hcpcs_desc                                                                                       
+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ A0425    | 121513492.7 | Ground mileage, per statute mile
+ Q9967    |  89883236.8 | Low osmolar contrast material, 300-399 mg/ml iodine concentration, per ml
+ 99214    |  87623941.6 | Established patient office or other outpatient, visit typically 25 minutes
+ 99213    |  74816265.8 | Established patient office or other outpatient visit, typically 15 minutes
+ P9603    |  57800815.4 | Travel allowance one way in connection with medically necessary laboratory specimen collection drawn from home bound or nursing home bound patient; prorated miles actually travelled
+ J1439    |    53613506 | Injection, ferric carboxymaltose, 1 mg
+ 97110    |  47794984.4 | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes
+ Q0138    |    47654561 | Injection, ferumoxytol, for treatment of iron deficiency anemia, 1 mg (non-esrd use)
+ J0897    |    45291470 | Injection, denosumab, 1 mg
+ J0717    |    41410519 | Injection, certolizumab pegol, 1 mg (code may be used for medicare when drug administered under the direct supervision of a physician, not for use when drug is self administered)
+ 36415    |    41116951 | Insertion of needle into vein for collection of blood sample
+ 99232    |  38914743.0 | Subsequent hospital inpatient care, typically 25 minutes per day
+ J0878    |    36789856 | Injection, daptomycin, 1 mg
+ J1071    |  36212292.9 | Injection, testosterone cypionate, 1 mg
+ J0585    |  33780592.4 | Injection, onabotulinumtoxina, 1 unit
+ A9575    |  28895544.9 | Injection, gadoterate meglumine, 0.1 ml
+ 80053    |    26113398 | Blood test, comprehensive group of blood chemicals
+ 85025    |  26076160.9 | Complete blood cell count (red cells, white blood cell, platelets), automated test
+ J0881    |  25492069.8 | Injection, darbepoetin alfa, 1 microgram (non-esrd use)
+ 99233    |  23968711.0 | Subsequent hospital inpatient care, typically 35 minutes per day
+ Q5101    |    23928005 | Injection, filgrastim-sndz, biosimilar, (zarxio), 1 microgram
+ J7192    |  22806986.2 | Factor viii (antihemophilic factor, recombinant) per i.u., not otherwise specified
+ 97140    |  22262719.8 | Manual (physical) therapy techniques to 1 or more regions, each 15 minutes
+ J3262    |    21567393 | Injection, tocilizumab, 1 mg
+ J9271    |  19161478.6 | Injection, pembrolizumab, 1 mg
+ 80061    |    16982931 | Blood test, lipids (cholesterol and triglycerides)
+ 88305    |  16814454.3 | Pathology examination of tissue using a microscope, intermediate complexity
+ J1453    |    16592916 | Injection, fosaprepitant, 1 mg
+ 97530    |  16295716.1 | Therapeutic activities to improve function, with one-on-one contact between patient and provider, each 15 minutes
+ 17003    |    16167800 | Destruction of 2-14 skin growths
+ A9585    |  16056192.5 | Injection, gadobutrol, 0.1 ml
+ 93010    |  15765551.3 | Routine electrocardiogram (ekg) using at least 12 leads with interpretation and report
+ J1100    |  15696086.5 | Injection, dexamethasone sodium phosphate, 1 mg
+ 71045    |  15474827.2 | X-ray of chest, 1 view
+ 97112    |  15425224.4 | Therapeutic procedure to re-educate brain-to-nerve-to-muscle function, each 15 minutes
+ G0008    |    15322487 | Administration of influenza virus vaccine
+ 84443    |  13381028.8 | Blood test, thyroid stimulating hormone (tsh)
+ 83036    |    13116837 | Hemoglobin a1c level
+ J7328    |  12905587.2 | Hyaluronan or derivative, gelsyn-3, for intra-articular injection, 0.1 mg
+ J1602    |  11424332.2 | Injection, golimumab, 1 mg, for intravenous use
+ J3301    |  11421467.8 | Injection, triamcinolone acetonide, not otherwise specified, 10 mg
+ 98941    |    11193445 | Chiropractic manipulative treatment, 3 to 4 spinal regions
+ J0129    |    11127563 | Injection, abatacept, 10 mg (code may be used for medicare when drug administered under the direct supervision of a physician, not for use when drug is self administered)
+ 99308    |  10516142.9 | Subsequent nursing facility visit, typically 15 minutes per day
+ 92014    |    10309822 | Eye and medical examination for diagnosis and treatment, established patient, 1 or more visits
+ J9267    |    10201264 | Injection, paclitaxel, 1 mg
+ 99309    |   9727551.0 | Subsequent nursing facility visit, typically 25 minutes per day
+ J9263    |     9309900 | Injection, oxaliplatin, 0.5 mg
+ 99285    |     9186204 | Emergency department visit, problem with significant threat to life or function
+ 99223    |   9060195.8 | Initial hospital inpatient care, typically 70 minutes per day
+(50 rows)
+
+
+
+
+
 
