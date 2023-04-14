@@ -8,4 +8,4 @@ Datasets:
   Medicare Physician and Other Practicioners - by Provider and Service Dictionary 
     (https://data.cms.gov/resources/medicare-physician-other-practitioners-by-provider-and-service-data-dictionary)
     
-Clean data: sort for dialysis treatment related costs --> categorize in home treatment vs. in clinic treatment --> run analysis of associated costs 
+Clean data --> EDA --> visualize 
