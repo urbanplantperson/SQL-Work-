@@ -498,8 +498,362 @@ dialysisdb-# LIMIT 50;
  99223    |   9060195.8 | Initial hospital inpatient care, typically 70 minutes per day
 (50 rows)
 
+--- Provider utilization rates --- 
+--- see provider billing rates to compare ---- 
+
+SELECT 
+ rndrng_NPI, rndrng_prvdr_last_org_name, rndrng_prvdr_first_name, rndrng_prvdr_MI, rndrng_prvdr_type, SUM(tot_srvcs::numeric) AS total_services
+FROM medicare_services_2020 
+  GROUP BY rndrng_NPI, rndrng_prvdr_last_org_name, rndrng_prvdr_first_name, rndrng_prvdr_MI, rndrng_prvdr_type
+  ORDER BY total_services DESC 
+LIMIT 50;
 
 
+ rndrng_npi |         rndrng_prvdr_last_org_name          | rndrng_prvdr_first_name | rndrng_prvdr_mi |    rndrng_prvdr_type    | total_services 
+------------+---------------------------------------------+-------------------------+-----------------+-------------------------+----------------
+ 1417915653 | Accredo Health Group Inc                    |                         |                 | Pharmacy                |       18551216
+ 1538144910 | Laboratory Corporation Of America Holdings  |                         |                 | Clinical Laboratory     |       15587891
+ 1013998921 | Caremark, L.L.C.                            |                         |                 | Pharmacy                |       10590601
+ 1063497451 | Laboratory Corporation Of America Holdings  |                         |                 | Clinical Laboratory     |        9109659
+ 1891731626 | Quest Diagnostics Clinical Laboratories Inc |                         |                 | Clinical Laboratory     |        8296484
+ 1174906432 | Phlebxpress                                 |                         |                 | Clinical Laboratory     |      8225120.4
+ 1366479099 | Unilab Corporation                          |                         |                 | Clinical Laboratory     |        6715914
+ 1932145778 | Quest Diagnostics Incorporated              |                         |                 | Clinical Laboratory     |        5958559
+ 1932184322 | Laboratory Corporation Of America Holdings  |                         |                 | Clinical Laboratory     |        5208971
+ 1295726032 | Laboratory Corporation Of America Holdings  |                         |                 | Clinical Laboratory     |        5194709
+ 1538105366 | Sonora Quest Laboratories, Llc.             |                         |                 | Clinical Laboratory     |        4644908
+ 1659352276 | Laboratory Corporation Of America           |                         |                 | Clinical Laboratory     |        4457790
+ 1790101681 | Amerathon,llc                               |                         |                 | Clinical Laboratory     |        4111268
+ 1194769497 | Clinical Pathology Laboratories, Inc.       |                         |                 | Clinical Laboratory     |        4073799
+ 1932166386 | Quest Diagnostics Clinical Laboratories Inc |                         |                 | Clinical Laboratory     |        3997743
+ 1790721538 | Quest Diagnostics Clinical Laboratories Inc |                         |                 | Clinical Laboratory     |        3884799
+ 1043382302 | Procare Pharmacy Direct, Llc.               |                         |                 | Pharmacy                |      3884170.2
+ 1619913449 | Unilab Corporation                          |                         |                 | Clinical Laboratory     |        3854237
+ 1134277494 | Bio-Reference Laboratories, Inc.            |                         |                 | Clinical Laboratory     |        3679890
+ 1255314704 | Laboratory Corporation Of America           |                         |                 | Clinical Laboratory     |        3461604
+ 1881630614 | Quest Diagnostics Llc Il                    |                         |                 | Clinical Laboratory     |        3182342
+ 1609812445 | Labone Llc                                  |                         |                 | Clinical Laboratory     |        3095013
+ 1518903350 | Quest Diagnostics Clinical Laboratories Inc |                         |                 | Clinical Laboratory     |        2939730
+ 1295823540 | American Health Associates Inc              |                         |                 | Clinical Laboratory     |        2920650
+ 1740262880 | Laboratory Corporation Of America           |                         |                 | Clinical Laboratory     |        2898889
+ 1265418669 | Laboratory Corporation Of America           |                         |                 | Clinical Laboratory     |        2847935
+ 1780001859 | Vista Clinical Diagnostics Llc              |                         |                 | Clinical Laboratory     |        2843262
+ 1760579825 | Clinical Laboratory Services, Inc.          |                         |                 | Clinical Laboratory     |        2742141
+ 1205872041 | Quest Diagnostics Clinical Laboratories Inc |                         |                 | Clinical Laboratory     |        2733593
+ 1326104613 | Quest Diagnostics Clinical Laboratories Inc |                         |                 | Clinical Laboratory     |        2729043
+ 1720378524 | Star Lab, Inc                               |                         |                 | Clinical Laboratory     |        2642077
+ 1255696175 | Veni-Express, Inc.                          |                         |                 | Clinical Laboratory     |        2641994
+ 1740361690 | Gamma Healthcare Inc                        |                         |                 | Clinical Laboratory     |        2584931
+ 1598731770 | Anastasio                                   | Patrick                 | J               | Internal Medicine       |        2491370
+ 1245307818 | Quest Diagnostics Incorporated Md           |                         |                 | Clinical Laboratory     |        2411765
+ 1841539541 | Kade                                        | Hemant                  |                 | Infectious Disease      |        2366765
+ 1881679751 | Laboratory Corporation Of America           |                         |                 | Clinical Laboratory     |        2342387
+ 1407113020 | Laboratory Of Florida Llc                   |                         |                 | Clinical Laboratory     |        2209915
+ 1194062448 | Quest Diagnostics Massachusetts Llc         |                         |                 | Clinical Laboratory     |        2165956
+ 1376587113 | Sunrise Medical Laboratories, Inc.          |                         |                 | Clinical Laboratory     |        2158895
+ 1952347791 | Quest Diagnostics Llc                       |                         |                 | Clinical Laboratory     |        2101322
+ 1073599478 | Laboratory Corporation Of America           |                         |                 | Clinical Laboratory     |        2100414
+ 1114315793 | Gamma Healthcare, Inc                       |                         |                 | Clinical Laboratory     |        2005611
+ 1851636435 | Unique Lab Services, Llc                    |                         |                 | Clinical Laboratory     |        1969794
+ 1497803209 | Okwuasaba                                   | Peter                   | A               | Infectious Disease      |        1822540
+ 1366543795 | Northwell Health Laboratories               |                         |                 | Clinical Laboratory     |        1816038
+ 1235186800 | Pathgroup Labs, Llc                         |                         |                 | Clinical Laboratory     |        1791596
+ 1336131481 | Sastry                                      | Vatsala                 | S               | Infectious Disease      |        1749650
+ 1700865094 | Symphony Diagnostic Services No 1 Llc       |                         |                 | Portable X-Ray Supplier |        1699454
+ 1548282510 | Accredo Health Group Inc                    |                         |                 | Pharmacy                |        1652232
+(50 rows)
+
+--- Average medicare reimbursement by provider speciality --- 
+SELECT rndrng_prvdr_type, AVG(Avg_mdcr_Pymnt_Amnt::numeric) as Avg_Medicare_Payment
+FROM medicare_services_2020
+GROUP BY rndrng_prvdr_type
+ORDER BY avg_medicare_payment DESC;
+
+ rndrng_prvdr_type                    | avg_medicare_payment 
+---------------------------------------------------------+----------------------
+ Ambulatory Surgical Center                              | 914.5012665168539083
+ Dentist                                                 | 417.3842831230057402
+ Cardiac Surgery                                         | 339.8992199448760626
+ Thoracic Surgery                                        | 297.2374500763793903
+ Radiation Therapy Center                                | 279.8081119563046563
+ Ambulance Service Provider                              | 273.9233673123778668
+ Oral Surgery (Dentist only)                             | 257.7722058370409783
+ Neurosurgery                                            | 251.3815274035095516
+ Vascular Surgery                                        | 233.7701752973854214
+ Micrographic Dermatologic Surgery                       | 223.1630997697973064
+ Peripheral Vascular Disease                             | 198.7447999628433553
+ Clinic or Group Practice                                | 197.5699805361046610
+ All Other Suppliers                                     | 179.3487593080610577
+ Surgical Oncology                                       | 162.8905178714428893
+ Radiation Oncology                                      | 154.2654257970779934
+ Orthopedic Surgery                                      | 151.6947318317804291
+ Plastic and Reconstructive Surgery                      | 149.9457579289270063
+ General Surgery                                         | 139.9032752814743573
+ Opioid Treatment Program                                | 134.6952433639364890
+ Clinical Cardiac Electrophysiology                      | 130.7317712031850085
+ Undefined Physician type                                | 130.4431069457652522
+ Gynecological Oncology                                  | 127.7895140723152282
+ Interventional Radiology                                | 125.9576652158535119
+ Independent Diagnostic Testing Facility (IDTF)          | 123.9098096219917132
+ Ophthalmology                                           | 123.4556671982519828
+ Colorectal Surgery (Proctology)                         | 121.6496274711894408
+ Interventional Cardiology                               | 119.7200411457270439
+ Medical Toxicology                                      | 110.6405745146865546
+ Certified Registered Nurse Anesthetist (CRNA)           | 110.4219894653971499
+ Nuclear Medicine                                        | 108.2737906735434111
+ Nephrology                                              | 107.4805524344678285
+ Dermatology                                             | 107.0644862290393111
+ Maxillofacial Surgery                                   | 105.9702490993313050
+ Gastroenterology                                        | 103.3065177329782041
+ Anesthesiology                                          | 102.8288996135161688
+ Hematopoietic Cell Transplantation and Cellular Therapy |  99.3492494015428470
+ Urology                                                 |  98.5947879849977432
+ Interventional Pain Management                          |  98.4668176308004786
+ Otolaryngology                                          |  98.4172893736699894
+ Hand Surgery                                            |  95.6712117110573891
+ Sleep Medicine                                          |  95.4996395260221034
+ Critical Care (Intensivists)                            |  94.0961568752589869
+ Neurology                                               |  93.9752762059793914
+ Hospitalist                                             |  93.4402516780898207
+ Pain Management                                         |  93.0981296424475128
+ Medical Genetics and Genomics                           |  92.5684629326027397
+ Neuropsychiatry                                         |  92.5088039974187003
+ Emergency Medicine                                      |  91.1806726832094149
+ Cardiology                                              |  90.7072969957766447
+ Anesthesiology Assistant                                |  90.6395586127540508
+ Hospice and Palliative Care                             |  89.0721145796156164
+ Mammography Center                                      |  85.4645477159600000
+ Intensive Cardiac Rehabilitation                        |  84.1225855192500000
+ Sports Medicine                                         |  82.9048624140444570
+ Infectious Disease                                      |  81.5823259753580056
+ Physical Medicine and Rehabilitation                    |  80.6647082503447833
+ Geriatric Psychiatry                                    |  77.7416250599328200
+ Hematology                                              |  76.5750421051359326
+ Medical Oncology                                        |  75.8913108613583179
+ Psychologist, Clinical                                  |  75.2821436166259776
+ Advanced Heart Failure and Transplant Cardiology        |  74.9630461015241722
+ Osteopathic Manipulative Medicine                       |  74.2001559841994344
+ Pulmonary Disease                                       |  73.3012776477962194
+ Speech Language Pathologist                             |  72.8369222756742337
+ Hematology-Oncology                                     |  72.3621139347482048
+ Geriatric Medicine                                      |  71.6031542093697454
+ Psychiatry                                              |  70.2904522952103665
+ Addiction Medicine                                      |  64.8054828187705302
+ Undersea and Hyperbaric Medicine                        |  63.9737542754355972
+ Internal Medicine                                       |  63.7825395913640874
+ Obstetrics & Gynecology                                 |  63.7763316959516759
+ Pharmacy                                                |  60.8467802521141384
+ Medicare Diabetes Preventive Program                    |  60.7655475656764706
+ Mass Immunizer Roster Biller                            |  59.6722177495279465
+ Licensed Clinical Social Worker                         |  58.9101594552605537
+ Preventive Medicine                                     |  58.4601419153864865
+ General Practice                                        |  57.7341430066583156
+ Centralized Flu                                         |  56.5486768237496779
+ Pediatric Medicine                                      |  55.6863872088550283
+ Podiatry                                                |  54.3582106039140416
+ Optometry                                               |  53.7943763976221746
+ Certified Clinical Nurse Specialist                     |  53.5001921317872424
+ Endocrinology                                           |  53.3653917077378324
+ Physician Assistant                                     |  51.7520432304219917
+ Family Practice                                         |  49.5024316348366520
+ Diagnostic Radiology                                    |  48.6384237523277748
+ Nurse Practitioner                                      |  48.3199149165149277
+ Unknown Supplier/Provider Specialty                     |  43.7052306402170732
+ Certified Nurse Midwife                                 |  43.4180985193746146
+ Rheumatology                                            |  43.3577140602161897
+ Public Health or Welfare Agency                         |  42.9240942271048154
+ Slide Preparation Facility                              |  41.8462258560000000
+ Allergy/ Immunology                                     |  40.2753913831262363
+ Pathology                                               |  37.7951747395459053
+ Clinical Laboratory                                     |  34.9232595820086606
+ Occupational Therapist in Private Practice              |  31.6923212525371532
+ Registered Dietitian or Nutrition Professional          |  31.4296630920619973
+ Physical Therapist in Private Practice                  |  29.5705573993534466
+ Chiropractic                                            |  26.0945766856176033
+ Audiologist                                             |  26.0004533205022010
+ Portable X-Ray Supplier                                 |  24.8769285042828064
+ Adult Congenital Heart Disease                          |   5.2768421053000000
+(102 rows)
+
+--- Most utilized AND most expensive servces --- 
+SELECT 
+ hcpcs_cd, hcpcs_desc, SUM(avg_mdcr_pymnt_amnt::numeric) AS total_payment 
+FROM medicare_services_2020 
+  GROUP BY hcpcs_cd, hcpcs_desc
+  ORDER BY SUM(tot_srvcs::numeric) DESC, SUM(avg_mdcr_pymnt_amnt::numeric) DESC
+LIMIT 25;
 
 
+ hcpcs_cd |                                                                                      hcpcs_desc                                                                                       |    total_payment    
+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------
+ A0425    | Ground mileage, per statute mile                                                                                                                                                      |    62413.6640218479
+ Q9967    | Low osmolar contrast material, 300-399 mg/ml iodine concentration, per ml                                                                                                             |      970.8189409755
+ 99214    | Established patient office or other outpatient, visit typically 25 minutes                                                                                                            | 30501122.3376745705
+ 99213    | Established patient office or other outpatient visit, typically 15 minutes                                                                                                            | 21316675.8621678916
+ P9603    | Travel allowance one way in connection with medically necessary laboratory specimen collection drawn from home bound or nursing home bound patient; prorated miles actually travelled |      276.2090327303
+ J1439    | Injection, ferric carboxymaltose, 1 mg                                                                                                                                                |     1173.0525893532
+ 97110    | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes                                                                                |  1288934.5690899754
+ Q0138    | Injection, ferumoxytol, for treatment of iron deficiency anemia, 1 mg (non-esrd use)                                                                                                  |     1069.5267150529
+ J0897    | Injection, denosumab, 1 mg                                                                                                                                                            |   146866.0052422117
+ J0717    | Injection, certolizumab pegol, 1 mg (code may be used for medicare when drug administered under the direct supervision of a physician, not for use when drug is self administered)    |     4264.5079856408
+ 36415    | Insertion of needle into vein for collection of blood sample                                                                                                                          |   269479.5666739459
+ 99232    | Subsequent hospital inpatient care, typically 25 minutes per day                                                                                                                      |  9929607.5880819016
+ J0878    | Injection, daptomycin, 1 mg                                                                                                                                                           |       31.0215848797
+ J1071    | Injection, testosterone cypionate, 1 mg                                                                                                                                               |       21.2207636661
+ J0585    | Injection, onabotulinumtoxina, 1 unit                                                                                                                                                 |    14618.5519984568
+ A9575    | Injection, gadoterate meglumine, 0.1 ml                                                                                                                                               |      335.2696958660
+ 80053    | Blood test, comprehensive group of blood chemicals                                                                                                                                    |   277021.2546264511
+ 85025    | Complete blood cell count (red cells, white blood cell, platelets), automated test                                                                                                    |   267084.2995593376
+ J0881    | Injection, darbepoetin alfa, 1 microgram (non-esrd use)                                                                                                                               |     3568.8709010519
+ 99233    | Subsequent hospital inpatient care, typically 35 minutes per day                                                                                                                      | 10801279.7014952091
+ Q5101    | Injection, filgrastim-sndz, biosimilar, (zarxio), 1 microgram                                                                                                                         |      243.4850680988
+ J7192    | Factor viii (antihemophilic factor, recombinant) per i.u., not otherwise specified                                                                                                    |    14778.4645981603
+ 97140    | Manual (physical) therapy techniques to 1 or more regions, each 15 minutes                                                                                                            |   957359.3332906017
+ J3262    | Injection, tocilizumab, 1 mg                                                                                                                                                          |     1721.4777710149
+ J9271    | Injection, pembrolizumab, 1 mg                                                                                                                                                        |    57469.0516050561
+(25 rows)
+
+--- Top service and provider speciality by state --- 
+SELECT DISTINCT ON (rndrng_prvdr_state_abrvtn)
+  rndrng_prvdr_state_abrvtn,
+  rndrng_prvdr_type,
+  HCPCS_desc,
+  Tot_srvcs
+FROM medicare_services_2020
+WHERE HCPCS_Drug_ind = 'N'
+ORDER BY rndrng_prvdr_state_abrvtn, Tot_srvcs DESC;
+
+ rndrng_prvdr_state_abrvtn |           rndrng_prvdr_type            |                                                    hcpcs_desc                                                     | tot_srvcs 
+---------------------------+----------------------------------------+-------------------------------------------------------------------------------------------------------------------+-----------
+ AA                        | Emergency Medicine                     | Emergency department visit, problem of high severity                                                              | 93
+ AE                        | Internal Medicine                      | Physician telephone patient service, 5-10 minutes of medical discussion                                           | 97
+ AK                        | Physical Therapist in Private Practice | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes            | 996
+ AL                        | Pathology                              | Pathology examination of tissue using a microscope, intermediate complexity                                       | 999
+ AP                        | Physician Assistant                    | Established patient office or other outpatient visit, typically 15 minutes                                        | 99
+ AR                        | Urology                                | Established patient office or other outpatient visit, typically 15 minutes                                        | 999
+ AS                        | Nurse Practitioner                     | Emergency department visit, problem of high severity                                                              | 81
+ AZ                        | Physician Assistant                    | Destruction of 2-14 skin growths                                                                                  | 999
+ CA                        | Internal Medicine                      | Subsequent nursing facility visit, typically 15 minutes per day                                                   | 999
+ CO                        | Physical Therapist in Private Practice | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes            | 999
+ CT                        | Pathology                              | Pathology examination of tissue using a microscope, intermediate complexity                                       | 999
+ DC                        | Ophthalmology                          | Eye and medical examination for diagnosis and treatment, established patient                                      | 996
+ DE                        | Physical Therapist in Private Practice | Therapeutic activities to improve function, with one-on-one contact between patient and provider, each 15 minutes | 999
+ FL                        | Clinical Laboratory                    | Thyroid hormone, t3 measurement                                                                                   | 9998
+ GA                        | Pain Management                        | Testing for presence of drug                                                                                      | 999
+ GU                        | Internal Medicine                      | Administration of influenza virus vaccine                                                                         | 99
+ HI                        | Cardiology                             | Established patient office or other outpatient, visit typically 25 minutes                                        | 999
+ IA                        | Ambulance Service Provider             | Ground mileage, per statute mile                                                                                  | 9994.9
+ ID                        | Physician Assistant                    | Insertion of needle into vein for collection of blood sample                                                      | 999
+ IL                        | Psychiatry                             | Psychotherapy, 30 minutes                                                                                         | 999
+ IN                        | Podiatry                               | Removal of tissue from 6 or more finger or toe nails                                                              | 999
+ KS                        | Cardiology                             | Blood test, clotting time                                                                                         | 999
+ KY                        | Nephrology                             | Subsequent hospital inpatient care, typically 35 minutes per day                                                  | 999
+ LA                        | Clinical Laboratory                    | Liver enzyme (sgpt), level                                                                                        | 999
+ MA                        | Allergy/ Immunology                    | Injection of allergenic extracts into skin for immediate reaction analysis                                        | 999
+ MD                        | Anesthesiology                         | Anesthesia for lens surgery                                                                                       | 999
+ ME                        | Podiatry                               | Removal of 2 to 4 thickened skin growths                                                                          | 999
+ MI                        | Radiation Oncology                     | Ultrasonic guidance for placement of radiation therapy fields                                                     | 999
+ MN                        | Medical Oncology                       | Established patient office or other outpatient, visit typically 25 minutes                                        | 999
+ MO                        | Physical Therapist in Private Practice | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes            | 999
+ MP                        | Optometry                              | Photography of the retina                                                                                         | 98
+ MS                        | Ambulance Service Provider             | Ambulance service, basic life support, non-emergency transport, (bls)                                             | 999
+ MT                        | Physical Therapist in Private Practice | Therapeutic procedure to re-educate brain-to-nerve-to-muscle function, each 15 minutes                            | 994
+ NC                        | Physical Therapist in Private Practice | Water pool therapy with therapeutic exercises to 1 or more areas, each 15 minutes                                 | 999
+ ND                        | Internal Medicine                      | Blood test, basic group of blood chemicals                                                                        | 999
+ NE                        | Physical Therapist in Private Practice | Water pool therapy with therapeutic exercises to 1 or more areas, each 15 minutes                                 | 997
+ NH                        | Internal Medicine                      | Established patient office or other outpatient, visit typically 25 minutes                                        | 999
+ NJ                        | Allergy/ Immunology                    | Injection of allergenic extracts into skin, accessed through the skin                                             | 9998
+ NM                        | Ambulance Service Provider             | Ambulance service, advanced life support, emergency transport, level 1 (als 1 - emergency)                        | 998
+ NV                        | Physical Therapist in Private Practice | Therapeutic activities to improve function, with one-on-one contact between patient and provider, each 15 minutes | 999
+ NY                        | Cardiology                             | Subsequent hospital inpatient care, typically 25 minutes per day                                                  | 999
+ OH                        | Clinical Laboratory                    | Sex hormone binding globulin (protein) level                                                                      | 999
+ OK                        | Physical Therapist in Private Practice | Therapeutic activities to improve function, with one-on-one contact between patient and provider, each 15 minutes | 999
+ OR                        | Ophthalmology                          | Diagnostic imaging of retina                                                                                      | 999
+ PA                        | Physical Therapist in Private Practice | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes            | 999
+ PR                        | Cardiology                             | Established patient office or other outpatient visit, typically 15 minutes                                        | 999
+ PW                        | Nurse Practitioner                     | Subsequent hospital inpatient care, typically 25 minutes per day                                                  | 52
+ RI                        | Diagnostic Radiology                   | Screening digital tomography of both breasts                                                                      | 999
+ SC                        | Internal Medicine                      | Established patient office or other outpatient, visit typically 25 minutes                                        | 999
+ SD                        | Podiatry                               | Established patient office or other outpatient visit, typically 10 minutes                                        | 998
+ TN                        | Ophthalmology                          | Eye and medical examination for diagnosis and treatment, established patient, 1 or more visits                    | 999
+ TX                        | Radiation Oncology                     | Ct scan guidance for insertion of radiation therapy fields                                                        | 999
+ UT                        | Physical Therapist in Private Practice | Manual (physical) therapy techniques to 1 or more regions, each 15 minutes                                        | 999
+ VA                        | Ambulance Service Provider             | Ground mileage, per statute mile                                                                                  | 999.3
+ VI                        | Physical Therapist in Private Practice | Therapeutic exercise to develop strength, endurance, range of motion, and flexibility, each 15 minutes            | 995
+ VT                        | Physical Therapist in Private Practice | Manual (physical) therapy techniques to 1 or more regions, each 15 minutes                                        | 999
+ WA                        | Dermatology                            | Destruction of 2-14 skin growths                                                                                  | 999
+ WI                        | Ophthalmology                          | Diagnostic imaging of retina                                                                                      | 998
+ WV                        | Diagnostic Radiology                   | X-ray of chest, 1 view                                                                                            | 999
+ WY                        | Physical Medicine and Rehabilitation   | Subsequent hospital inpatient care, typically 35 minutes per day                                                  | 995
+ XX                        | Internal Medicine                      | Established patient office or other outpatient visit, typically 15 minutes                                        | 992
+ ZZ                        | Gastroenterology                       | Biopsy of the esophagus, stomach, and/or upper small bowel using an endoscope                                     | 99
+(62 rows)
+
+
+Questions to ask: which of these services are prevenative/preventable? what are the lifestyle risks associated with each? do geographic factors have an impact?
+how much money could you save? what story does the data tell? --- ambulatory mileage reimbursement is high... either travled far or alot?... --- 
+
+
+---- how many services were performed for psychology --- 
+
+SELECT 
+ hcpcs_cd, hcpcs_desc, SUM(tot_srvcs::numeric) AS total_services
+FROM medicare_services_2020 
+  WHERE rndrng_prvdr_type = 'Psychologist, Clinical'
+  GROUP BY hcpcs_cd, hcpcs_desc
+  ORDER BY total_services DESC 
+LIMIT 50;
+ hcpcs_cd |                                                                                                                            hcpcs_desc                                                                                                                            | total_services 
+----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------
+ 90837    | Psychotherapy, 60 minutes                                                                                                                                                                                                                                        |      1574448.7
+ 90834    | Psychotherapy, 45 minutes                                                                                                                                                                                                                                        |      1398185.6
+ 90832    | Psychotherapy, 30 minutes                                                                                                                                                                                                                                        |       942205.5
+ 90791    | Psychiatric diagnostic evaluation                                                                                                                                                                                                                                |       336690.5
+ 96139    | Psychological or neuropsychological test administration and scoring by technician, additional 30 minutes                                                                                                                                                         |       264449.5
+ 96133    | Neuropsychological testing evaluation by qualified health care professional, additional 60 minutes                                                                                                                                                               |       257639.5
+ 96137    | Psychological or neuropsychological test administration and scoring by qualified health care professional, additional 30 minutes                                                                                                                                 |       251335.7
+ 90785    | Interactive complexity                                                                                                                                                                                                                                           |         127091
+ 96132    | Neuropsychological testing evaluation by qualified health care professional, first 60 minutes                                                                                                                                                                    |       126979.5
+ 96136    | Psychological or neuropsychological test administration and scoring by qualified health care professional, first 30 minutes                                                                                                                                      |          87536
+ 96116    | Neurobehavioral status examination by qualified health care professional with interpretation and report, first 60 minutes                                                                                                                                        |          77467
+ 90853    | Group psychotherapy                                                                                                                                                                                                                                              |          62006
+ 96138    | Psychological or neuropsychological test administration and scoring by technician, first 30 minutes                                                                                                                                                              |          51597
+ 96131    | Psychological testing evaluation by qualified health care professional, additional 60 minutes                                                                                                                                                                    |        50805.0
+ 96130    | Psychological testing evaluation by qualified health care professional, first 60 minutes                                                                                                                                                                         |          47633
+ 96121    | Neurobehavioral status examination by qualified health care professional with interpretation and report, additional 60 minutes                                                                                                                                   |          28963
+ 96158    | Health behavior intervention, individual, face-to-face; initial 30 minutes                                                                                                                                                                                       |          23895
+ Q3014    | Telehealth originating site facility fee                                                                                                                                                                                                                         |          22428
+ 96159    | Health behavior intervention, individual, face-to-face; each additional 15 minutes                                                                                                                                                                               |          21299
+ 96165    | Health behavior intervention, group, face-to-face; each additional 15 minutes                                                                                                                                                                                    |          18152
+ 96156    | Health behavior assessment, or re-assessment                                                                                                                                                                                                                     |          14643
+ 90847    | Family psychotherapy including patient, 50 minutes                                                                                                                                                                                                               |           9077
+ 97130    | Therapeutic interventions that focus on cognitive function (eg, attention, memory, reasoning, executive function, problem solving, and/or pragmatic functioning) and compensatory strategies to manage the performance of an activity (eg, managing time or sche |           8550
+ 98968    | Telephone assessment and management service, 21-30 minutes of medical discussion                                                                                                                                                                                 |           7773
+ 96164    | Health behavior intervention, group, face-to-face; initial 30 minutes                                                                                                                                                                                            |           7437
+ 99484    | Care management services for behavioral health conditions, at least 20 minutes clinical staff time                                                                                                                                                               |           5018
+ 97129    | Therapeutic interventions that focus on cognitive function (eg, attention, memory, reasoning, executive function, problem solving, and/or pragmatic functioning) and compensatory strategies to manage the performance of an activity (eg, managing time or sche |           3509
+ 90839    | Psychotherapy for crisis, first 60 minutes                                                                                                                                                                                                                       |           2342
+ 90846    | Family psychotherapy, 50 minutes                                                                                                                                                                                                                                 |           1895
+ 99443    | Physician telephone patient service, 21-30 minutes of medical discussion                                                                                                                                                                                         |           1870
+ 99233    | Subsequent hospital inpatient care, typically 35 minutes per day                                                                                                                                                                                                 |           1562
+ 90880    | Hypnotherapy                                                                                                                                                                                                                                                     |           1168
+ G2063    | Qualified nonphysician healthcare professional online assessment and management service, for an established patient, for up to seven days, cumulative time during the 7 days; 21 or more minutes                                                                 |           1014
+ 99354    | Prolonged office or other outpatient service first hour                                                                                                                                                                                                          |            919
+ 98967    | Telephone assessment and management service, 11-20 minutes of medical discussion                                                                                                                                                                                 |            839
+ 96127    | Brief emotional or behavioral assessment                                                                                                                                                                                                                         |            824
+ 96167    | Health behavior intervention, family (with the patient present), face-to-face; initial 30 minutes                                                                                                                                                                |            585
+ 99441    | Physician telephone patient service, 5-10 minutes of medical discussion                                                                                                                                                                                          |            491
+ 99335    | Established patient assisted living visit, typically 25 minutes                                                                                                                                                                                                  |            463
+ G9489    | Remote in-home visit for the evaluation and management of an established patient for use only in a medicare-approved coms innovation center demonstration project, which requires at least 2 of the following 3 key components: a comprehensive history; a compr |            458
+ 99309    | Subsequent nursing facility visit, typically 25 minutes per day                                                                                                                                                                                                  |            439
+ 99215    | Established patient office or other outpatient, visit typically 40 minutes                                                                                                                                                                                       |            437
+ 90840    | Psychotherapy for crisis                                                                                                                                                                                                                                         |            434
+ 99336    | Established patient assisted living visit, typically 40 minutes                                                                                                                                                                                                  |            321
+ 96146    | Psychological or neuropsychological test administration and scoring by single standardized instrument via electronic platform with automated result                                                                                                              |            320
+ 96168    | Health behavior intervention, family (with the patient present), face-to-face; each additional 15 minutes                                                                                                                                                        |            288
+ 90792    | Psychiatric diagnostic evaluation with medical services                                                                                                                                                                                                          |            288
+ 99442    | Physician telephone patient service, 11-20 minutes of medical discussion                                                                                                                                                                                         |            264
+ 99214    | Established patient office or other outpatient, visit typically 25 minutes                                                                                                                                                                                       |            261
+ G2012    | Brief communication technology-based service, e.g. virtual check-in, by a physician or other qualified health care professional who can report evaluation and management services, provided to an established patient, not originating from a related e/m servic |            212
+(50 rows)
 
